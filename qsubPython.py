@@ -15,7 +15,9 @@ class qsubPython:
     resources: str = None
     outfile: str = 'out.out'
     errorfile: str = 'out.out'
-    job_script: List[str] = field(default_factory=list)
+    job_script: List[str] = field(default_factory=['export TMPDIR=/glade/scratch/$USER/temp',
+                                                   'mkdir -p $TMPDIR',
+                                                   'source /etc/profile.d/modules.sh'])
 
     def set_job_args(self, **kwargs):
         keys = list(kwargs.keys())
