@@ -42,8 +42,6 @@ class qsubPython:
     def submit(self, commands: List[str] = []):
         #takes current job_script and appends commands to it, submits PBS job, prints jobid
         job_script = self.job_script + commands
-        if not job_script: raise ValueError("no lines to run in body of script!")
-
         lines = self._args_to_lines() + job_script
 
         temp_qsub_file = 'qsub_temp_script'
@@ -67,13 +65,10 @@ class qsubPython:
         #remove qsub script file
         os.remove(temp_qsub_file)
         return jobID
-    def makefile(self, commands=[]):
+    def makefile(self, commands=[], filename='makefile_out'):
         job_script = self.job_script + commands
-        if not job_script: raise ValueError("no lines to run in body of script!")
-
         lines = self._args_to_lines() + job_script
-
-        temp_qsub_file = 'qsub_temp_script'
+        temp_qsub_file = filename
         with open(temp_qsub_file, 'w') as f:
             for line in lines:
                 f.write(f"{line}\n")
