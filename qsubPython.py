@@ -32,7 +32,7 @@ def allresources():
 
 
 def to_gb(s):
-    kb_used = int(s[:-2])
+    kb_used = int(re.findall('[\d]+', s)[0])
     return round(kb_used / 1e6, 2)
 
 
@@ -98,12 +98,8 @@ class qsubPython:
 
     def submit(self, commands: List[str] = []):
         # takes current job_script and appends commands to it, submits PBS job, prints jobid
-        lines = self._args_to_lines() + self.job_script + commands
-
         temp_qsub_file = "qsub_temp_script"
-        with open(temp_qsub_file, "w") as f:  # note: this overwrites the previous file
-            for line in lines:
-                f.write(f"{line}\n")
+        self.makefile(commands, filename=temp_qsub_file)
         # submit job
         shell_run = subprocess.run(
             f"qsub {temp_qsub_file}",
