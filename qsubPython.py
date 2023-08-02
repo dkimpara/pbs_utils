@@ -139,7 +139,9 @@ class qsubPython:
                 empty.append(attr)
         if empty:
             raise ValueError(f"{empty} are unset")
-
+        
+        self._check_resource_spec()
+        
         job_config = [
             f"-A {self.account}",
             f"-M {self.user_list}",
@@ -153,3 +155,7 @@ class qsubPython:
         ]
         job_config = [f"#PBS {s}" for s in job_config]
         return ["#!/bin/bash -l"] + job_config
+    
+    def _check_resource_spec():
+        if ('mem' in self.resources) and ('GB' not in self.resources):
+            raise ValueError("need to specify GB in memory spec")
